@@ -1,0 +1,286 @@
+/* ── CSS Variables ───────────────────────────────────────────── */
+/* Light theme (default) */
+.appLogin {
+  --bg: #e8f0f7;
+  --panel-bg: #ffffff;
+  --panel-shadow: 0 2px 20px rgba(0, 0, 0, 0.09);
+  --title-color: #6b7280;
+  --divider: #e5e7eb;
+  --label-color: #374151;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-border-hover: #9ca3af;
+  --input-text: #111827;
+  --input-focus-border: #3b82f6;
+  --input-focus-shadow: rgba(59, 130, 246, 0.15);
+  --icon-color: #9ca3af;
+  --icon-hover: #4b5563;
+  --error-text: #dc2626;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --btn-bg: #2563eb;
+  --btn-bg-hover: #1d4ed8;
+  --btn-shadow: rgba(37, 99, 235, 0.3);
+  --btn-shadow-hover: rgba(37, 99, 235, 0.35);
+  --btn-disabled: #93c5fd;
+  --toggle-bg: rgba(0,0,0,0.06);
+  --toggle-icon: #6b7280;
+  --toggle-icon-hover: #111827;
+
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 96px 24px 40px;
+  position: relative;
+  transition: background 0.25s;
+}
+
+/* Dark theme override */
+.appLogin.dark {
+  --bg: #1a1d23;
+  --panel-bg: #22262e;
+  --panel-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+  --title-color: #8892a4;
+  --divider: #363c4a;
+  --label-color: #c9d1e0;
+  --input-bg: #2a2f3a;
+  --input-border: #363c4a;
+  --input-border-hover: #4ecdc4;
+  --input-text: #e8eaf0;
+  --input-focus-border: #4ecdc4;
+  --input-focus-shadow: rgba(78, 205, 196, 0.15);
+  --icon-color: #8892a4;
+  --icon-hover: #e8eaf0;
+  --error-text: #f87171;
+  --error-bg: rgba(220, 38, 38, 0.1);
+  --error-border: rgba(220, 38, 38, 0.3);
+  --btn-bg: #4ecdc4;
+  --btn-bg-hover: #38b2aa;
+  --btn-shadow: rgba(78, 205, 196, 0.3);
+  --btn-shadow-hover: rgba(78, 205, 196, 0.45);
+  --btn-disabled: #2a6b67;
+  --toggle-bg: rgba(255,255,255,0.08);
+  --toggle-icon: #8892a4;
+  --toggle-icon-hover: #e8eaf0;
+}
+
+/* ── Layout ──────────────────────────────────────────────────── */
+.loginOuter {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 440px;
+}
+
+.loginPanel {
+  background: var(--panel-bg);
+  border-radius: 14px;
+  box-shadow: var(--panel-shadow);
+  padding: 48px 44px;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.loginPanelFlat {
+  box-shadow: none;
+  border-radius: 0;
+  padding: 32px 20px;
+  background: transparent;
+}
+
+/* ── Theme toggle button ─────────────────────────────────────── */
+.themeToggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--toggle-bg);
+  color: var(--toggle-icon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.themeToggle:hover {
+  color: var(--toggle-icon-hover);
+  transform: scale(1.1);
+}
+
+/* ── Title ───────────────────────────────────────────────────── */
+.loginTitle {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--title-color);
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.25s;
+}
+
+/* ── Form ────────────────────────────────────────────────────── */
+.loginFormArea {
+  border-top: 1px solid var(--divider);
+  margin-top: 16px;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: border-color 0.25s;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--label-color);
+  letter-spacing: 0.02em;
+  transition: color 0.25s;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fieldInput {
+  width: 100%;
+  height: 44px;
+  padding: 0 42px 0 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--input-text);
+  background: var(--input-bg);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+              background 0.25s, color 0.25s;
+}
+
+.fieldInput:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.fieldInput:hover:not(:focus) {
+  border-color: var(--input-border-hover);
+}
+
+.inputIcon {
+  position: absolute;
+  right: 13px;
+  display: flex;
+  align-items: center;
+  color: var(--icon-color);
+  pointer-events: none;
+  transition: color 0.25s;
+}
+
+.toggleBtn {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--icon-color);
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.toggleBtn:hover {
+  color: var(--icon-hover);
+}
+
+/* ── Error ───────────────────────────────────────────────────── */
+.errorMessage {
+  font-size: 13px;
+  color: var(--error-text);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* ── Actions ─────────────────────────────────────────────────── */
+.loginActions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--divider);
+  padding-top: 20px;
+  margin-top: 4px;
+  transition: border-color 0.25s;
+}
+
+.loginButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--btn-bg);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px var(--btn-shadow);
+}
+.loginButton:hover {
+  background: var(--btn-bg-hover);
+  box-shadow: 0 4px 12px var(--btn-shadow-hover);
+}
+.loginButton:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+.loginButton:disabled {
+  background: var(--btn-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .appLogin {
+    padding-top: 48px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .themeToggle {
+    top: 12px;
+    right: 12px;
+  }
+}

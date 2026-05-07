@@ -1,0 +1,116 @@
+﻿[
+  {
+    "id": "general",
+    "icons": " oj-ux-ico-audit-general-file",
+    "children": [
+      {
+        "id": "descriptors",
+        "icons": "oj-ux-ico-content-item-list"
+      },
+      {
+        "id": "users",
+        "icons": "ph ph-user-circle"
+      },
+      {
+        "id": "muniments",
+        "icons": "ph ph-books"
+      }
+    ]
+  },
+  {
+    "id": "agenda",
+    "icons": "ph ph-note",
+    "children": [
+      {
+        "id": "contacts",
+        "icons": "ph ph-contactless-payment"
+      }
+    ]
+  },
+  {
+    "id": "accounting",
+    "icons": "ph ph-calculator",
+    "children": [
+      {
+        "id": "accounts",
+        "icons": "ph ph-users"
+      },
+      {
+        "id": "subAccounts",
+        "icons": "ph ph-user-check"
+      },
+      {
+        "id": "currencies",
+        "icons": "ph ph-coins"
+      },
+      {
+        "id": "vouchers",
+        "icons": "ph ph-currency-dollar",
+        "children": [
+          {
+            "id": "cashVouchers",
+            "icons": "ph ph-grid-four"
+          }
+        ]
+      },
+      {
+        "id": "receipts",
+        "icons": "oj-ux-ico-receipt-extraction",
+        "children": []
+      },
+      {
+        "id": "accountingReports",
+        "icons": "ph ph-newspaper",
+        "children": [
+          {
+            "id": "repVouItems",
+            "icons": "ph ph-seal-percent"
+          },
+          {
+            "id": "repAccBalances",
+            "icons": "ph ph-cards"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stock",
+    "icons": "oj-ux-ico-chart-stock",
+    "children": [
+      {
+        "id": "materials",
+        "icons": "fa-small fa-cubes"
+      },
+      {
+        "id": "prices",
+        "icons": "oj-ux-ico-application-type-3"
+      },
+      {
+        "id": "unities",
+        "icons": "ph ph-unite"
+      },
+      {
+        "id": "warehouses",
+        "icons": "ph ph-warehouse"
+      },
+      {
+        "id": "categories",
+        "icons": "ph ph-folder-notch"
+      },
+      {
+        "id": "matClasses",
+        "icons": "oj-ux-ico-text-classification"
+      },
+      {
+        "id": "taxes",
+        "icons": "oj-ux-ico-percentage-coin"
+      },
+      {
+        "id": "bills",
+        "icons": "oj-ux-ico-billboard",
+        "children": []
+      }
+    ]
+  }
+]

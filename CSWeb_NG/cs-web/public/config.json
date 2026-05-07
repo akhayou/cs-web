@@ -1,0 +1,9 @@
+{
+    "isSecure": false,
+    "host": "localhost",
+    "port": "81",
+    "database": "sony",
+    "endpoints": {
+        "main": "csen"
+    }
+}
