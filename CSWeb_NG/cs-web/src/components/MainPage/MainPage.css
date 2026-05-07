@@ -1423,6 +1423,38 @@ body {
     border-color: #e74c3c;
 }
 
+
+.form-input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    /* Forces the browser to render the internal picker in dark or light mode */
+    color-scheme: var(--is-dark, dark);
+    cursor: pointer;
+    text-align: start;
+}
+
+
+
+
+[dir="rtl"] .form-input[type="date"]::-webkit-calendar-picker-indicator {
+    margin-right: -4px;
+    margin-left: 0;
+}
+
+/* Styling the Calendar Icon to match your accent color */
+.form-input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: var(--icon-filter);
+    /* Optional: can make the icon match your theme */
+    padding: 5px;
+}
+
+/* Light Theme Overrides */
+.light-theme .form-input[type="date"] {
+    color-scheme: light;
+}
+
 /* Select with leading icon */
 .form-select-wrap {
     position: relative;

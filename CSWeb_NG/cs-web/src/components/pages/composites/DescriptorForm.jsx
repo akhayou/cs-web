@@ -60,7 +60,8 @@ function ListField({ descriptor, value, onChange, isRTL }) {
             value={selected}
             onChange={(opt) => onChange(descriptor.DscUID, opt?.value ?? null)}
             isClearable
-            placeholder={descriptor.DscName}
+            // placeholder={descriptor.DscName}
+            placeholder=""
         />
     );
 }
@@ -85,7 +86,8 @@ function MultiField({ descriptor, value, onChange, isRTL }) {
             options={options}
             value={selected}
             onChange={(opts) => onChange(descriptor.DscUID, opts ? opts.map((o) => o.value) : [])}
-            placeholder={descriptor.DscName}
+            // placeholder={descriptor.DscName}
+            placeholder=""
         />
     );
 }
@@ -205,7 +207,7 @@ const DescriptorForm = forwardRef(function DescriptorForm(
             return buildOutput(descriptors, values);
         },
 
-        // ❌ DOES NOT trigger onChange
+        // DOES NOT trigger onChange
         setValues(array) {
             if (!array) {
                 setValuesState({});

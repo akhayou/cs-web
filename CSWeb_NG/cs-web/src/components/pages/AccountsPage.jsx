@@ -248,7 +248,9 @@ export default function AccountsPage({ t, isMobile, onBack, logout, isRTL = fals
                 setItems(accs);
                 setFinalAccounts(accs.filter((i) => i.AccIsFinal));
                 setBooks(accs.filter((i) => i.ElmIsBook));
-                //  if (accs.length) handleSelect(accs[accs.length - 1]);
+
+                const dscs = descriptorsData?.result?.items || [];
+                descriptorRef.current?.refresh(JSON.stringify(dscs));
 
                 if (accs.length) {
                     // Look for the ID from the URL (routerKey)
@@ -263,8 +265,6 @@ export default function AccountsPage({ t, isMobile, onBack, logout, isRTL = fals
                 setCurrencies(currenciesData?.result?.items || []);
 
                 // Descriptors
-                const dscs = descriptorsData?.result?.items || [];
-                descriptorRef.current?.refresh(JSON.stringify(dscs));
             })
             .catch((err) => {
                 console.error(err);

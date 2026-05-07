@@ -3,6 +3,9 @@ import ListPanel from './ListPanel.jsx';
 import { buildEndpointURL } from '../../services/config';
 import Select from 'react-select';
 import { FaPhone, FaEnvelope } from 'react-icons/fa';
+// import DatePicker from 'react-datepicker';
+// import { CalendarIcon } from '../../utils/icons.jsx';
+// import 'react-datepicker/dist/react-datepicker.css';
 import { useToast } from '../../utils/core.jsx';
 import { printCard } from '../../utils/printCard.js';
 
@@ -276,6 +279,17 @@ export default function UsersPage({ t, isMobile, onBack, logout, isRTL, routerKe
                             </div>
                             <div className="form-field">
                                 <label className="form-label">{t?.('labels.user.expireDate') ?? 'Expire date'}</label>
+                                {/* <DatePicker
+                                    selected={expireDateValue}
+                                    onChange={(e) => {
+                                        setExpireDateValue(e.target.value);
+                                        setIsDisabled(false);
+                                    }}
+                                    className="form-input"
+                                />
+                                <span className="date-icon">
+                                    <CalendarIcon />
+                                </span> */}
                                 <input
                                     className="form-input"
                                     type="date"
