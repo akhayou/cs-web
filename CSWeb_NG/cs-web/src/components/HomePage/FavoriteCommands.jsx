@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { PlusIcon } from '../MainPage/Icons.jsx';
 import { buildEndpointURL } from '../../services/config';
 import Commands from './Commands.jsx';
+import Select from 'react-select';
+import { selectStyles } from '../../utils/Styles.js';
 
-export default function FavoriteCommands({ availableCommands = [], onNavigate, t }) {
+export default function FavoriteCommands({ availableCommands = [], onNavigate, t, isRTL }) {
     const [favorites, setFavorites] = useState([]);
     const [available, setAvailable] = useState([]);
     const [selected, setSelected] = useState('');
@@ -11,6 +13,15 @@ export default function FavoriteCommands({ availableCommands = [], onNavigate, t
     const [loading, setLoading] = useState(true);
     const popupRef = useRef(null);
     const addBtnRef = useRef(null);
+
+    const options = [
+        ...available.map((cmd) => ({
+            value: cmd.command,
+            label: t ? t(`router.${cmd.id}`) : cmd.id,
+        })),
+    ];
+
+    const selectedOption = options.find((o) => o.value === selected) || null;
 
     // ── Load favorites from registry on mount ─────────────────
     useEffect(() => {
@@ -113,14 +124,23 @@ export default function FavoriteCommands({ availableCommands = [], onNavigate, t
                 {/* Popup */}
                 {popupOpen && (
                     <div className="fc-popup" ref={popupRef}>
-                        <select className="fc-select" value={selected} onChange={(e) => setSelected(e.target.value)}>
+                        <Select
+                            styles={selectStyles(isRTL)}
+                            className="form-select-wrap"
+                            options={options}
+                            value={selectedOption}
+                            onChange={(option) => setSelected(option?.value ?? '')}
+                            isRtl={document.dir === 'rtl'}
+                            placeholder={t ? t('chooseCommand') : 'Choose command'}
+                        />
+                        {/* <select className="fc-select" value={selected} onChange={(e) => setSelected(e.target.value)}>
                             <option value="">-- {t ? t('chooseCommand') : 'Choose command'} --</option>
                             {available.map((cmd) => (
                                 <option key={cmd.command} value={cmd.command}>
                                     {t ? t(`router.${cmd.id}`) : cmd.id}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
                         <div className="fc-popup-actions">
                             <button className="fc-popup-confirm" onClick={addFavorite} disabled={!selected}>
                                 <PlusIcon /> {t ? t('add') : 'Add'}

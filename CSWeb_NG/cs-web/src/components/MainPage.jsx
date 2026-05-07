@@ -161,6 +161,25 @@ export default function MainPage() {
         window.history.pushState(state, '', url);
     };
 
+    const muniments = JSON.parse(sessionStorage.getItem('muniments')) || [];
+    const _t = (value) => {
+        let result = t(value);
+        if (value.includes(`.${result}`)) {
+            const parts = value.split('.').filter(Boolean);
+            if (parts[0] == 'router') {
+                try {
+                    if (muniments.length > 0) {
+                        const item = muniments.find((item) => item.MunGuid === parts[1]);
+                        if (item) result = item.MunName;
+                    }
+                    return result;
+                } catch (error) {
+                    return result;
+                }
+            } else return result;
+        } else return result;
+    };
+
     // ── Single navigation entry point ─────────────────────────
     const handleNavigate = (node) => {
         if (!node) {
@@ -249,13 +268,25 @@ export default function MainPage() {
                             {nodeStack.length > 1 ? t(`router.${nodeStack[nodeStack.length - 2].id}`) : t('home')}
                         </span>
                     </button>
-                    <Commands commands={activeMenuNode.children} onNavigate={handleNavigate} t={t} isFavorite={false} />
+                    <Commands
+                        commands={activeMenuNode.children}
+                        onNavigate={handleNavigate}
+                        t={_t}
+                        isFavorite={false}
+                    />
                 </div>
             );
         }
 
         return (
-            <HomePage menuTree={menuTree} t={t} isMobile={isSmallScreen} logout={logout} onNavigate={handleNavigate} />
+            <HomePage
+                menuTree={menuTree}
+                t={_t}
+                isMobile={isSmallScreen}
+                logout={logout}
+                onNavigate={handleNavigate}
+                isRTL={isRTL}
+            />
         );
     };
 
@@ -266,7 +297,7 @@ export default function MainPage() {
                 menuTree={menuTree}
                 onlyIcons={onlyIcons}
                 setOnlyIcons={setOnlyIcons}
-                t={t}
+                t={_t}
                 isMobile={isSmallScreen}
                 drawerOpen={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
@@ -282,7 +313,7 @@ export default function MainPage() {
                     isDark={isDark}
                     setIsDark={setIsDark}
                     logout={logout}
-                    t={t}
+                    t={_t}
                     isMobile={isSmallScreen}
                     onGoHome={handleGoHome}
                     onHamburgerClick={() => setDrawerOpen(true)}

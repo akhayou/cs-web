@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { getMenuIcon } from '../MainPage/menuIcons.jsx';
 
-export default function Commands({ commands, onNavigate, t, isFavorite }) {
+export default function Commands({ commands, onNavigate, t, rmFavorite = null, isFavorite = false }) {
     return (
         <div className="fc-buttons">
             {commands.map((cmd) => (
@@ -12,7 +12,7 @@ export default function Commands({ commands, onNavigate, t, isFavorite }) {
                     </button>
 
                     {isFavorite && (
-                        <button className="fc-remove" onClick={() => removeFavorite(cmd.id)}>
+                        <button className="fc-remove" onClick={() => rmFavorite(cmd.id)}>
                             ✕
                         </button>
                     )}

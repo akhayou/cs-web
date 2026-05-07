@@ -26,7 +26,7 @@ export default function Topbar({
                 <HomeIcon />
             </button>
             <div className="topbar-nav">
-                <button className="topbar-nav-btn active">{currentPage}</button>
+                <button className="topbar-nav-btn active">{t(`router.${currentPage}`)}</button>
             </div>
 
             {/* Full title (desktop) */}

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { PlusIcon } from '../MainPage/Icons.jsx';
 import { buildEndpointURL } from '../../services/config';
 import { useToast } from '../../utils/core.jsx';
+import Select from 'react-select';
+import { selectStyles } from '../../utils/Styles.js';
 
 /**
  * ClockPanel
@@ -16,7 +18,7 @@ import { useToast } from '../../utils/core.jsx';
  *   clockLabel(clock)                      → same logic inline
  *   saveClocks() / addClock() / removeClock() → same logic
  */
-export default function ClockPanel({ t, isMobile, logout }) {
+export default function ClockPanel({ t, isMobile, logout, isRTL }) {
     const [clocks, setClocks] = useState([]);
     const [times, setTimes] = useState({});
     const [allTimezones, setAllTimezones] = useState([]);
@@ -31,6 +33,15 @@ export default function ClockPanel({ t, isMobile, logout }) {
     // ── Detect current timezone (mirrors OJet) ─────────────────
     const currentTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const currentCity = currentTZ.split('/').pop().replace('_', ' ');
+
+    const cityOptions = [
+        ...allTimezones.map((tz) => ({
+            value: tz.value,
+            label: tz.label,
+        })),
+    ];
+
+    const selectedCityOption = cityOptions.find((o) => o.value === selectedCity) || null;
 
     // ── Build timezone list (mirrors allTimeZones) ─────────────
     useEffect(() => {
@@ -231,7 +242,17 @@ export default function ClockPanel({ t, isMobile, logout }) {
 
                 {popupOpen && (
                     <div className="fc-popup" ref={popupRef}>
-                        <select
+                        <Select
+                            styles={selectStyles(isRTL)}
+                            className="form-select-wrap"
+                            options={cityOptions}
+                            value={selectedCityOption}
+                            onChange={(option) => setSelectedCity(option?.value ?? '')}
+                            placeholder={t ? t('chooseCity') : 'Choose city'}
+                            isSearchable
+                            placeholder={t ? t('chooseCommand') : 'Choose command'}
+                        />
+                        {/* <select
                             className="fc-select"
                             value={selectedCity}
                             onChange={(e) => setSelectedCity(e.target.value)}
@@ -242,7 +263,7 @@ export default function ClockPanel({ t, isMobile, logout }) {
                                     {tz.label}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
                         <div className="fc-popup-actions">
                             <button className="fc-popup-confirm" onClick={addClock} disabled={!selectedCity}>
                                 <PlusIcon /> {t ? t('add') : 'Add'}
