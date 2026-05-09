@@ -45,6 +45,7 @@ export default function ListPanel({
     renderIcon,
     t,
     isMobile,
+    isRTL,
 }) {
     const [filter, setFilter] = useState('');
     const [menuOpen, setMenuOpen] = useState(false);

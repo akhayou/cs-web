@@ -129,76 +129,6 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
 
     const formRef = useRef(null);
 
-    // const customStyles = {
-    //     control: (base, state) => ({
-    //         ...base,
-    //         backgroundColor: 'var(--surface)',
-    //         fontSize: '13.5px',
-    //         borderRadius: '8px',
-    //         borderColor: 'var(--border)',
-    //         color: 'var(--text)',
-    //         boxShadow: 'none',
-    //         '&:hover': {
-    //             borderColor: 'var(--accent)',
-    //         },
-    //     }),
-
-    //     menu: (base) => ({
-    //         ...base,
-    //         backgroundColor: 'var(--surface)',
-    //         color: 'var(--text)',
-    //         zIndex: 9999,
-    //     }),
-
-    //     option: (base, state) => ({
-    //         ...base,
-    //         backgroundColor: state.isFocused ? 'rgba(78, 205, 196, 0.15)' : 'var(--surface)',
-    //         fontSize: '13.5px',
-    //         color: 'var(--text)',
-    //         display: 'flex',
-    //         alignItems: 'center',
-    //         gap: 10,
-    //         cursor: 'pointer',
-    //     }),
-
-    //     singleValue: (base) => ({
-    //         ...base,
-    //         color: 'var(--text)',
-    //         display: 'flex',
-    //         alignItems: 'center',
-    //         gap: 10,
-    //     }),
-    //     multiValue: (base) => ({
-    //         ...base,
-    //         width: '140px',
-    //         display: 'flex',
-    //         backgroundColor: 'var(--accent)',
-    //         borderRadius: '8px',
-    //         padding: '2px 6px',
-    //     }),
-
-    //     multiValueLabel: (base) => ({
-    //         ...base,
-    //         color: 'var(--dark-text)',
-    //         fontSize: '13px',
-    //         display: 'flex',
-    //         alignItems: 'center',
-    //         gap: '12px',
-    //     }),
-
-    //     multiValueRemove: (base) => ({
-    //         ...base,
-    //         color: 'var(--dark-text)',
-    //         cursor: 'pointer',
-    //         marginLeft: isRTL ? undefined : 'auto',
-    //         marginRight: isRTL ? 'auto' : undefined,
-    //         ':hover': {
-    //             backgroundColor: 'rgba(0,0,0,0.2)',
-    //             color: '#fff',
-    //         },
-    //     }),
-    // };
-
     // ── Fetch descriptors on mount ────────────────────────────
     useEffect(() => {
         const url = buildEndpointURL('main');
@@ -380,6 +310,7 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
                 onPrint={() => printCard('card', t('router.descriptors'))}
                 t={t}
                 isMobile={isMobile}
+                isRTL={isRTL}
             />
 
             {/* Right panel — form */}

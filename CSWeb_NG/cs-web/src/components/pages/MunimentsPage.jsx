@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import ListPanel from './ListPanel.jsx';
+import Select from 'react-select';
 import MunimentDataForm from './composites/MunimentDataForm.jsx';
 import { buildEndpointURL } from '../../services/config';
 import { useToast } from '../../utils/core.jsx';
+import { selectStyles } from '../../utils/Styles.js';
 import { printCard } from '../../utils/printCard.js';
 
 /**
@@ -109,6 +111,17 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
             .finally(() => setLoading(false));
     }, []);
 
+    // ── Select helpers for react-select ───────────────────────
+    const toOption = (arr, keyF) => arr.map((i) => ({ value: i[keyF], label: t(`router.${i[keyF]}`) }));
+
+    const findOption = (arr, keyF, val) => toOption(arr, keyF).find((o) => o.value === val) ?? null;
+
+    // ── Muniment Types  Schema  ───────────────────────
+    const munTypes = sessionStorage.getItem('munTypesData');
+    const munTypesData = munTypes ? JSON.parse(munTypes) : null;
+
+    const toSTypeSchema = (value) => (munTypesData ? munTypesData.find((item) => item.guid === value)?.fields : null);
+
     // ── Select item (mirrors parseItem) ───────────────────────
     const handleSelect = (item) => {
         if (!item) return;
@@ -119,7 +132,9 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
         setCodeValue(item.MunCode ?? '');
         setMunimentGuid(item.MunGuid ?? null);
         setColorHex(intToHex(item.MunColor));
-        dataFormRef.current?.refresh(item.MunData ? JSON.stringify(item.MunData) : null);
+        const typeSchema = toSTypeSchema(item.MunGuid);
+        console.log(typeSchema);
+        dataFormRef.current?.refresh(typeSchema, item.MunData);
     };
 
     // ── New (mirrors newItemExecute) ──────────────────────────
@@ -132,7 +147,7 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
         setCodeValue('');
         setMunimentGuid(null);
         setColorHex('#4ecdc4');
-        dataFormRef.current?.refresh(null);
+        dataFormRef.current?.refresh(null, null);
     };
 
     // ── Cancel (mirrors handleCancel) ─────────────────────────
@@ -271,7 +286,7 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
                 onSelect={handleSelect}
                 onNew={handleNew}
                 onDelete={handleDelete}
-                onPrint={() => printCard('mun-card', t ? t('router.muniments') : 'Muniments')}
+                onPrint={() => printPanel('mun-card', t ? t('router.muniments') : 'Muniments')}
                 renderIcon={renderListIcon}
                 t={t}
                 isMobile={isMobile}
@@ -283,6 +298,26 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
                     <div className="page-form-grid">
                         {/* Left column */}
                         <div className="page-form-col">
+                            {method === 'insert' ? (
+                                <div className="form-field">
+                                    <label className="form-label">{t ? t('inputs.munType') : 'Muniment Type'}</label>
+                                    <div className="form-select-wrap">
+                                        <Select
+                                            className="form-select-wrap"
+                                            styles={selectStyles(isRTL)}
+                                            isClearable
+                                            options={toOption(munTypesData, 'guid')}
+                                            value={findOption(munTypesData, 'guid', munimentGuid)}
+                                            onChange={(opt) => {
+                                                setMunimentGuid(opt?.value ?? null);
+                                                const typeSchema = toSTypeSchema(opt?.value);
+                                                dataFormRef.current?.refresh(typeSchema, null);
+                                            }}
+                                            placeholder={t ? t('inputs.munType') : 'Muniment Type'}
+                                        />
+                                    </div>
+                                </div>
+                            ) : null}
                             <div className="form-field">
                                 <label className="form-label">{t ? t('inputs.name') : 'Name'} *</label>
                                 <input

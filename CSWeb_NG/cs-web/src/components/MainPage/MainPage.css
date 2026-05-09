@@ -1247,6 +1247,10 @@ body {
     flex-shrink: 0;
 }
 
+/* .list-panel-item-text {
+    gap: 8px;
+} */
+
 .list-panel-item-label {
     font-size: 13.5px;
     color: var(--text);
@@ -1856,6 +1860,12 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    padding: 8px;
+    float: right;
+}
+
+[dir="rtl"] .list-panel-item-secondary {
+    float: left;
 }
 
 /* Extra menu items section (account reports submenu) */

@@ -432,6 +432,7 @@ export default function AccountsPage({ t, isMobile, onBack, logout, isRTL = fals
                 }))}
                 t={t}
                 isMobile={isMobile}
+                isRTL={isRTL}
             />
 
             {/* Right panel */}

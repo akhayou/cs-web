@@ -85,6 +85,7 @@ const i18n = {
             accName: 'Acc/Name',
             accCode: 'Acc/Code',
             accCodeName: 'Acc/ Code Name',
+            munType: 'Muniment type',
         },
         commands: {
             openInNewTab: 'Open in new tab',
@@ -433,6 +434,7 @@ const i18n = {
             taxRate: 'نسبة الضريبة',
             isBase: 'افتراضي',
             dataType: 'نوع البيانات',
+            munType: 'نوع المستند',
         },
         commands: {
             openInNewTab: 'فتح في تبويب جديد',

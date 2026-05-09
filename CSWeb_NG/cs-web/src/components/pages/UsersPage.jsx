@@ -219,6 +219,7 @@ export default function UsersPage({ t, isMobile, onBack, logout, isRTL, routerKe
                 onPrint={() => printCard('card', t('router.users'))}
                 t={t}
                 isMobile={isMobile}
+                isRTL={isRTL}
             />
 
             {/* Right panel — form */}

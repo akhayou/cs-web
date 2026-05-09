@@ -1,42 +1,26 @@
 import { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import Select from 'react-select';
-import { selectStyles } from '../../../utils/Styles';
+import { selectStyles } from '../../../utils/Styles.js';
 import { buildEndpointURL } from '../../../services/config';
 
 /**
  * MunimentDataForm
  *
- * OJet → React mapping:
- *   muniment-data-view.html + muniment-data-viewModel.js
+ * Two modes depending on what refresh() receives:
  *
- *   this.items ko.observableArray              → useState(items)
- *   this.refresh(jsonString)                   → ref.current.refresh(jsonString)
- *   this.getValues()                           → ref.current.getValues()
- *   this.setValues(array)                      → ref.current.setValues(array)
- *   this.dataType(name, value)                 → dataType() helper
- *   oj-bind-if dataType == 'string'            → <input type="text">
- *   oj-bind-if dataType == 'number'            → <input type="number">
- *   oj-bind-if dataType == 'boolean'           → <Switch>
- *   oj-bind-if dataType == 'account'           → <Select> from accountsDP
- *   oj-bind-if dataType == 'currency'          → <Select> from currenciesDP
- *   oj-bind-if dataType == 'warehouses'        → <Select> from warehousesDP
- *   oj-bind-if dataType == 'branches'          → <Select> from branchesDP
- *   oj-bind-if dataType == 'prices'            → <Select> from pricesDP
- *   this.accountsData / currenciesData etc.    → fetched on mount
- *   getLabel(name)                             → t(`labels.muniments.${name}`)
- *   munimentOptionsLabel                       → showLabel prop
+ * Mode 1 — Schema-driven (selectedTypeSchema provided):
+ *   refresh(schema, dataObj)
+ *   schema = [{ name, type, table?, note? }]
+ *   type values: 'uacc' → accounts, 'ucur' → currencies,
+ *                'ubrn' → branches, 'uwhs' → warehouses,
+ *                'uprc' → prices, 'Currency'|'number' → number input,
+ *                'Boolean' → switch, anything else → text input
+ *   dataObj = { AccDebit: 123, CurID: 456, ... } (saved values)
  *
- * Props:
- *   showLabel  {boolean}   Show section label
- *   t          {function}  Translation function
- *   isRTL      {boolean}   RTL direction
- *   onChange   {function}  Called when any field changes
- *
- * Ref methods:
- *   refresh(jsonString)   — parse MunData JSON object and build field list
- *   getValues()           — returns { [name]: value } object
- *   setValues(obj)        — populate fields from saved values object
- *   validate()            — returns true if all required fields are filled
+ * Mode 2 — Legacy object-driven (no schema):
+ *   refresh(dataObj)
+ *   dataObj = { AccMove: 123, DefCur: 456, ... }
+ *   Type is inferred from field name (mirrors OJet dataType())
  */
 
 // ── Toggle Switch ─────────────────────────────────────────────
@@ -51,21 +35,39 @@ function Switch({ checked, onChange, label }) {
     );
 }
 
-// ── dataType helper (mirrors this.dataType) ───────────────────
-function dataType(name, value) {
+// ── Type resolution ───────────────────────────────────────────
+
+// Schema-driven: resolve type from schema entry
+// mirrors type field in selectedTypeSchema
+const typeFromSchema = (entry) => {
+    const t = (entry.type ?? '').toLowerCase();
+    if (t === 'uacc') return 'account';
+    if (t === 'ucur') return 'currency';
+    if (t === 'ubrn') return 'branches';
+    if (t === 'uwhs') return 'warehouses';
+    if (t === 'uprc') return 'prices';
+    if (t === 'boolean') return 'boolean';
+    if (t === 'currency' || t === 'number') return 'number';
+    return 'string';
+};
+
+// Legacy: infer type from field name (mirrors OJet dataType())
+const typeFromName = (name, value) => {
     if (name.includes('Acc')) return 'account';
     if (name.includes('Cur')) return 'currency';
     if (name.includes('Warehouse')) return 'warehouses';
     if (name.includes('Branch')) return 'branches';
     if (name.includes('Price')) return 'prices';
     return typeof value; // 'string', 'number', 'boolean'
-}
+};
 
 const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true, t, isRTL = false, onChange }, ref) {
-    const [items, setItems] = useState([]); // [{ name, initialValue, value }]
-    const [values, setValues] = useState({}); // { [name]: currentValue }
+    // items: [{ name, type, initialValue }]
+    const [items, setItems] = useState([]);
+    // values: { [name]: currentValue }
+    const [values, setValues] = useState({});
 
-    // ── Lookup data (fetched once on mount) ───────────────────
+    // ── Lookup data fetched once on mount ─────────────────────
     const [accounts, setAccounts] = useState([]);
     const [currencies, setCurrencies] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
@@ -80,7 +82,11 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
         });
-        const seed = (cmd, name) => ({ command: cmd, uid: '', params: { action: 'RunSeed', method: 'select', name } });
+        const seed = (cmd, name) => ({
+            command: cmd,
+            uid: '',
+            params: { action: 'RunSeed', method: 'select', name },
+        });
 
         Promise.all([
             fetch(url, opts(seed('Stocks', 'Accounts'))),
@@ -103,51 +109,84 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
     // ── Helpers ───────────────────────────────────────────────
     const toOpts = (arr, kF = 'ElmUID', lF = 'ElmName') => arr.map((i) => ({ value: i[kF], label: i[lF] }));
 
-    const findOpt = (arr, kF, lF, val) => toOpts(arr, kF, lF).find((o) => o.value === val) ?? null;
+    const findOpt = (opts, val) => opts.find((o) => o.value === val) ?? null;
+
+    const lookupOptions = {
+        account: toOpts(accounts),
+        currency: toOpts(currencies),
+        warehouses: toOpts(warehouses),
+        branches: toOpts(branches),
+        prices: toOpts(prices),
+    };
 
     const getLabel = (name) => (t ? t(`labels.muniments.${name}`) : name);
 
     const handleChange = (name, value) => {
-        const next = { ...values, [name]: value };
-        setValues(next);
-        onChange?.(next);
+        setValues((prev) => {
+            const next = { ...prev, [name]: value };
+            onChange?.(next);
+            return next;
+        });
     };
 
     // ── Ref methods ───────────────────────────────────────────
     useImperativeHandle(ref, () => ({
-        // mirrors this.refresh(jsonString)
-        // MunData is a JSON object like { "AccDebit": 123, "CurID": 456, ... }
-        refresh(jsonString) {
-            if (!jsonString) {
+        /**
+         * refresh(schemaOrData, dataObj?)
+         *
+         * Two signatures:
+         *   refresh(schema, dataObj)  — schema-driven mode
+         *   refresh(dataObj)          — legacy object-driven mode
+         *
+         * schema   = [{ name, type, table?, note? }]
+         * dataObj  = { [name]: value }  (plain object, NOT json string)
+         */
+        refresh(schemaOrData, dataObj) {
+            // If schema is null/undefined but dataObj exists → use legacy mode
+            const schema = Array.isArray(schemaOrData) ? schemaOrData : null;
+            const dataObjResolved = schema ? dataObj : (schemaOrData ?? dataObj);
+
+            if (!schema && !dataObjResolved) {
                 setItems([]);
                 setValues({});
                 return;
             }
-            try {
-                const obj = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
-                // Filter out 'Options' key, build field list from entries
-                const parsed = Object.entries(obj)
+
+            let parsed = [];
+            let initVals = {};
+
+            if (schema) {
+                // ── Mode 1: Schema-driven ──────────────────────
+                parsed = schema.map((entry) => ({
+                    name: entry.name,
+                    type: typeFromSchema(entry),
+                    initialValue: dataObjResolved?.[entry.name] ?? null,
+                }));
+            } else {
+                // ── Mode 2: Legacy object-driven ──────────────
+                parsed = Object.entries(dataObjResolved)
                     .filter(([name]) => name !== 'Options')
-                    .map(([name, initialValue]) => ({ name, initialValue }));
-                setItems(parsed);
-                // Pre-populate values with initial values
-                const initVals = {};
-                parsed.forEach(({ name, initialValue }) => {
-                    initVals[name] = initialValue ?? null;
-                });
-                setValues(initVals);
-            } catch (e) {
-                console.error('MunimentDataForm.refresh error:', e);
+                    .map(([name, initialValue]) => ({
+                        name,
+                        type: typeFromName(name, initialValue),
+                        initialValue: initialValue ?? null,
+                    }));
             }
+
+            parsed.forEach(({ name, initialValue }) => {
+                initVals[name] = initialValue;
+            });
+
+            setItems(parsed);
+            setValues(initVals);
         },
 
-        // mirrors this.getValues() — returns { [name]: value } object
+        // getValues — returns { [name]: value }
         getValues() {
             return { ...values };
         },
 
-        // mirrors this.setValues(obj)
-        // Called when loading a saved muniment — obj is { AccDebit: 123, ... }
+        // setValues — populate from saved data object
         setValues(obj) {
             if (!obj) {
                 // Reset to initial values
@@ -158,26 +197,15 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
                 setValues(initVals);
                 return;
             }
-            const incoming = typeof obj === 'string' ? JSON.parse(obj) : obj;
-            setValues((prev) => ({ ...prev, ...incoming }));
+            setValues((prev) => ({ ...prev, ...obj }));
         },
 
-        // mirrors checkValidationGroup
         validate() {
             return true;
         },
     }));
 
     if (items.length === 0) return null;
-
-    // ── Select options by lookup type ─────────────────────────
-    const lookupOptions = {
-        account: toOpts(accounts),
-        currency: toOpts(currencies),
-        warehouses: toOpts(warehouses),
-        branches: toOpts(branches),
-        prices: toOpts(prices),
-    };
 
     return (
         <div className="descriptor-form">
@@ -189,67 +217,55 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
 
             <div className="descriptor-form-grid">
                 {items.map((item) => {
-                    const type = dataType(item.name, item.initialValue);
-                    const label = getLabel(item.name);
-                    const val = values[item.name] ?? null;
+                    const { name, type } = item;
+                    const label = getLabel(name);
+                    const val = values[name] ?? null;
+                    const opts = lookupOptions[type] ?? [];
 
                     return (
-                        <div key={item.name} className="descriptor-field">
+                        <div key={name} className="descriptor-field">
                             {type !== 'boolean' && (
-                                <label className="form-label" htmlFor={item.name}>
+                                <label className="form-label" htmlFor={name}>
                                     {label}
                                 </label>
                             )}
 
-                            {/* string → text input */}
+                            {/* string → text */}
                             {type === 'string' && (
                                 <input
-                                    id={item.name}
+                                    id={name}
                                     className="form-input"
                                     type="text"
                                     value={val ?? ''}
-                                    onChange={(e) => handleChange(item.name, e.target.value)}
+                                    onChange={(e) => handleChange(name, e.target.value)}
                                 />
                             )}
 
-                            {/* number → number input */}
+                            {/* number → number */}
                             {type === 'number' && (
                                 <input
-                                    id={item.name}
+                                    id={name}
                                     className="form-input"
                                     type="number"
                                     value={val ?? ''}
-                                    onChange={(e) => handleChange(item.name, parseFloat(e.target.value) || 0)}
+                                    onChange={(e) => handleChange(name, parseFloat(e.target.value) || 0)}
                                 />
                             )}
 
                             {/* boolean → switch */}
                             {type === 'boolean' && (
-                                <Switch checked={!!val} onChange={(v) => handleChange(item.name, v)} label={label} />
+                                <Switch checked={!!val} onChange={(v) => handleChange(name, v)} label={label} />
                             )}
 
                             {/* account / currency / warehouses / branches / prices → Select */}
                             {['account', 'currency', 'warehouses', 'branches', 'prices'].includes(type) && (
                                 <Select
-                                    inputId={item.name}
+                                    inputId={name}
                                     styles={selectStyles(isRTL)}
                                     isClearable
-                                    options={lookupOptions[type] ?? []}
-                                    value={findOpt(
-                                        type === 'account'
-                                            ? accounts
-                                            : type === 'currency'
-                                              ? currencies
-                                              : type === 'warehouses'
-                                                ? warehouses
-                                                : type === 'branches'
-                                                  ? branches
-                                                  : prices,
-                                        'ElmUID',
-                                        'ElmName',
-                                        val,
-                                    )}
-                                    onChange={(opt) => handleChange(item.name, opt?.value ?? null)}
+                                    options={opts}
+                                    value={findOpt(opts, val)}
+                                    onChange={(opt) => handleChange(name, opt?.value ?? null)}
                                     placeholder={label}
                                     menuPortalTarget={document.body}
                                 />

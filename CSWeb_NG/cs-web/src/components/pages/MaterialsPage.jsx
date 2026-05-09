@@ -340,6 +340,7 @@ export default function MaterialsPage({ t, isMobile, onBack, logout, isRTL = fal
                 // onPrint={() => printCard('mat-card', t ? t('router.materials') : 'Materials')}
                 t={t}
                 isMobile={isMobile}
+                isRTL={isRTL}
             />
 
             {/* Right panel */}

@@ -103,6 +103,10 @@ export async function handleLogin(userLogin, userPassword) {
         sessionStorage.setItem('muniments', JSON.stringify(munData.result.items));
     }
 
+    if (munTypesData.result?.items) {
+        sessionStorage.setItem('munTypesData', JSON.stringify(munTypesData.result.items));
+    }
+
     // ── 3. SET SESSION USER ───────────────────────────────────────────────────
     // Mirrors: sessionStorage.setItem('user', username)
     sessionStorage.setItem('user', username);
