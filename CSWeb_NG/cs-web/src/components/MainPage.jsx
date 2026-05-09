@@ -239,7 +239,7 @@ export default function MainPage() {
             return (
                 <PageRouter
                     nodeId={activeLeaf.id}
-                    t={t}
+                    t={_t}
                     isMobile={isSmallScreen}
                     onBack={handleBack}
                     logout={logout}

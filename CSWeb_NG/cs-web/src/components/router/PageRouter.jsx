@@ -14,12 +14,14 @@ import ComingSoon from './ComingSoon.jsx';
 import DescriptorsPage from '../pages/DescriptorsPage.jsx';
 import UsersPage from '../pages/UsersPage.jsx';
 import AccountsPage from '../pages/AccountsPage.jsx';
+import MaterialsPage from '../pages/MaterialsPage.jsx';
+import MunimentsPage from '../pages/MunimentsPage.jsx';
 
 const PAGE_MAP = {
     // ── General ──────────────────────────────────────────────
     descriptors: DescriptorsPage,
     users: UsersPage,
-    // muniments:        MunimentsPage,
+    muniments: MunimentsPage,
     // srvBill:          SrvBillPage,
 
     // ── Agenda ───────────────────────────────────────────────
@@ -42,7 +44,7 @@ const PAGE_MAP = {
     // AccReconcilement: AccReconcilementPage,
 
     // ── Stock ─────────────────────────────────────────────────
-    // materials:        MaterialsPage,
+    materials: MaterialsPage,
     // prices:           PricesPage,
     // unities:          UnitiesPage,
     // warehouses:       WarehousesPage,
@@ -74,5 +76,15 @@ export default function PageRouter({ nodeId, t, isMobile, onBack, logout, isRTL,
         );
     }
 
-    return <ComingSoon nodeId={nodeId} t={t} onBack={onBack} logout={logout} isRTL={isRTL} routerKey={routerKey} />;
+    return (
+        <ComingSoon
+            nodeId={nodeId}
+            t={t}
+            isMobile={isMobile}
+            onBack={onBack}
+            logout={logout}
+            isRTL={isRTL}
+            routerKey={routerKey}
+        />
+    );
 }

@@ -24,7 +24,7 @@ export default function ComingSoon({ nodeId, t, onBack, logout, isRTL, routerKey
                 >
                     <polyline points="15 18 9 12 15 6" />
                 </svg>
-                {t ? t('back') : 'Back'}
+                {t ? t('commands.back') : 'Back'}
             </button>
         </div>
     );

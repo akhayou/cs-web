@@ -36,11 +36,13 @@ export default function ListPanel({
     guid,
     keyField,
     labelField,
+    secondaryField,
     selectedKey,
     onSelect,
     onNew,
     onDelete,
     onPrint,
+    renderIcon,
     t,
     isMobile,
 }) {
@@ -209,8 +211,17 @@ export default function ListPanel({
                                                     });
                                                 }}
                                             >
-                                                <div className="list-panel-item-icon">{getMenuIcon(guid)}</div>
-                                                <span className="list-panel-item-label">{label(item)}</span>
+                                                <div className="list-panel-item-icon">
+                                                    {renderIcon ? renderIcon(item) : getMenuIcon(guid)}
+                                                </div>
+                                                <div className="list-panel-item-text">
+                                                    <span className="list-panel-item-label">{label(item)}</span>
+                                                    {secondaryField && item[secondaryField] && (
+                                                        <span className="list-panel-item-secondary">
+                                                            {item[secondaryField]}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                         );
                                     })
