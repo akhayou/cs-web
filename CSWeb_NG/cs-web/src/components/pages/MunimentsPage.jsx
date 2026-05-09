@@ -286,7 +286,7 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
                 onSelect={handleSelect}
                 onNew={handleNew}
                 onDelete={handleDelete}
-                onPrint={() => printPanel('mun-card', t ? t('router.muniments') : 'Muniments')}
+                onPrint={() => printCard('mun-card', t ? t('router.muniments') : 'Muniments')}
                 renderIcon={renderListIcon}
                 t={t}
                 isMobile={isMobile}
