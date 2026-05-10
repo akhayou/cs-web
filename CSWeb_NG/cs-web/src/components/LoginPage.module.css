@@ -23,7 +23,7 @@
   --btn-shadow: rgba(37, 99, 235, 0.3);
   --btn-shadow-hover: rgba(37, 99, 235, 0.35);
   --btn-disabled: #93c5fd;
-  --toggle-bg: rgba(0,0,0,0.06);
+  --toggle-bg: rgba(0, 0, 0, 0.06);
   --toggle-icon: #6b7280;
   --toggle-icon-hover: #111827;
 
@@ -58,7 +58,7 @@
   --btn-shadow: rgba(78, 205, 196, 0.3);
   --btn-shadow-hover: rgba(78, 205, 196, 0.45);
   --btn-disabled: #2a6b67;
-  --toggle-bg: rgba(255,255,255,0.08);
+  --toggle-bg: rgba(255, 255, 255, 0.08);
   --toggle-icon: #8892a4;
   --toggle-icon-hover: #e8eaf0;
 }
@@ -107,6 +107,7 @@
   justify-content: center;
   transition: background 0.2s, color 0.2s, transform 0.15s;
 }
+
 .themeToggle:hover {
   color: var(--toggle-icon-hover);
   transform: scale(1.1);
@@ -166,7 +167,7 @@
   background: var(--input-bg);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease,
-              background 0.25s, color 0.25s;
+    background 0.25s, color 0.25s;
 }
 
 .fieldInput:focus {
@@ -201,6 +202,7 @@
   border-radius: 4px;
   transition: color 0.15s;
 }
+
 .toggleBtn:hover {
   color: var(--icon-hover);
 }
@@ -242,14 +244,17 @@
   transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   box-shadow: 0 1px 3px var(--btn-shadow);
 }
+
 .loginButton:hover {
   background: var(--btn-bg-hover);
   box-shadow: 0 4px 12px var(--btn-shadow-hover);
 }
+
 .loginButton:active {
   transform: scale(0.97);
   box-shadow: none;
 }
+
 .loginButton:disabled {
   background: var(--btn-disabled);
   box-shadow: none;
@@ -268,8 +273,35 @@
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
 }
+
+/* ── Remember Me ─────────────────────────────────────────────── */
+.rememberMeRow {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.rememberMeLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--label-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.rememberMeCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--btn-bg);
+  cursor: pointer;
+}
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
@@ -279,6 +311,7 @@
     padding-left: 16px;
     padding-right: 16px;
   }
+
   .themeToggle {
     top: 12px;
     right: 12px;

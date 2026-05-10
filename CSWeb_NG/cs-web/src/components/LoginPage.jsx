@@ -3,7 +3,7 @@ import styles from './LoginPage.module.css';
 import { useTranslation } from '../utils/i18n.js';
 import { PersonIcon, EyeIcon, EyeOffIcon, EnterIcon } from '../utils/icons.jsx';
 
-// Inline SVG icons for theme toggle (no extra dependency)
+// Inline SVG icons for theme toggle
 const SunIcon = () => (
     <svg
         width="16"
@@ -25,6 +25,7 @@ const SunIcon = () => (
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
 );
+
 const MoonIcon = () => (
     <svg
         width="16"
@@ -40,16 +41,36 @@ const MoonIcon = () => (
 );
 
 export default function LoginPage({ errorMessage, loading = false, onLogin }) {
-    const [userLogin, setUserLogin] = useState('');
+    // Remembered username
+    const [userLogin, setUserLogin] = useState(() => {
+        try {
+            const rememberMe = localStorage.getItem('rememberMe') === 'true';
+            return rememberMe ? localStorage.getItem('rememberedUser') || '' : '';
+        } catch {
+            return '';
+        }
+    });
+
     const [userPassword, setUserPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [language, setLanguage] = useState(() => localStorage.getItem('appLanguage') || 'en-us');
+
+    // Remember Me checkbox state
+    const [rememberMe, setRememberMe] = useState(() => {
+        try {
+            return localStorage.getItem('rememberMe') === 'true';
+        } catch {
+            return false;
+        }
+    });
+
+    const [language] = useState(() => localStorage.getItem('appLanguage') || 'en-us');
+
     const t = useTranslation(language);
+
     const userNameLabel = t('Username');
-    const passwordLabel = t('Password');
     const loginLabel = t('login');
 
-    // Read isDark from localStorage — same key AppContext uses
+    // Theme state
     const [isDark, setIsDark] = useState(() => {
         try {
             return localStorage.getItem('isDark') === 'true';
@@ -58,7 +79,6 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
         }
     });
 
-    // Keep localStorage in sync when toggled on login page
     const toggleTheme = () => {
         setIsDark((prev) => {
             const next = !prev;
@@ -70,21 +90,40 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
     };
 
     const usernameRef = useRef(null);
+
     useEffect(() => {
         usernameRef.current?.focus();
     }, []);
 
     const handleLogin = () => {
+        // Save or remove remembered username
+        try {
+            if (rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+                localStorage.setItem('rememberedUser', userLogin);
+            } else {
+                localStorage.removeItem('rememberMe');
+                localStorage.removeItem('rememberedUser');
+            }
+        } catch {}
+
         if (typeof onLogin === 'function') {
-            onLogin({ userLogin, userPassword });
+            onLogin({
+                userLogin,
+                userPassword,
+                rememberMe,
+            });
         }
     };
 
     const handleKeyUp = (e) => {
-        if (e.key === 'Enter') handleLogin();
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
     };
 
-    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 600);
+    const [isSmallScreen, setIsSmallScreen] = useState(typeof window !== 'undefined' ? window.innerWidth < 600 : false);
+
     useEffect(() => {
         const onResize = () => setIsSmallScreen(window.innerWidth < 600);
         window.addEventListener('resize', onResize);
@@ -93,8 +132,9 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
 
     return (
         <div className={`${styles.appLogin} ${isDark ? styles.dark : ''}`}>
-            {/* Theme toggle — top-right corner */}
+            {/* Theme Toggle */}
             <button
+                type="button"
                 className={styles.themeToggle}
                 onClick={toggleTheme}
                 aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -122,8 +162,8 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
                                         value={userLogin}
                                         onChange={(e) => setUserLogin(e.target.value)}
                                         onKeyUp={handleKeyUp}
-                                        required
                                         autoComplete="username"
+                                        required
                                         ref={usernameRef}
                                     />
                                     <span className={styles.inputIcon} aria-label={userNameLabel}>
@@ -158,12 +198,27 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
                                 </div>
                             </div>
 
+                            {/* Remember Me */}
+                            <div className={styles.rememberMeRow}>
+                                <label className={styles.rememberMeLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className={styles.rememberMeCheckbox}
+                                    />
+                                    <span>{t('rememberMe') || 'Remember me'}</span>
+                                </label>
+                            </div>
+
+                            {/* Error */}
                             {errorMessage && (
                                 <p className={styles.errorMessage} role="alert">
                                     {errorMessage}
                                 </p>
                             )}
 
+                            {/* Login Button */}
                             <div className={styles.loginActions}>
                                 <button
                                     type="button"
@@ -177,7 +232,8 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
                                     ) : (
                                         <EnterIcon />
                                     )}
-                                    <span>{loading ? 'Logging in…' : loginLabel}</span>
+
+                                    <span>{loading ? t('loggingIn') : loginLabel}</span>
                                 </button>
                             </div>
                         </div>

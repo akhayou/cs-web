@@ -28,6 +28,9 @@ const i18n = {
         chooseCity: 'Choose city',
         add: 'Add',
         cancel: 'Cancel',
+        rememberMe: 'Remember me',
+        noResults: 'No data found.',
+        loggingIn: 'Logging in…',
         inputs: {
             command: 'command',
             name: 'Name',
@@ -66,7 +69,6 @@ const i18n = {
             unique: 'Unique',
             notNull: 'Prevent empty values',
             exchange: 'Exchange rate',
-            exchangeRate: 'Exchange rate',
             finalAccount: 'Final account',
             partName: 'Part name',
             partValue: 'Part value',
@@ -212,6 +214,8 @@ const i18n = {
                 DefCur: 'Currency',
                 Warehouse: 'Warehouse',
                 Branch: 'Branch',
+                CutRate: 'Exchange rate',
+                CommissionRate: 'Commission rate',
 
                 LastPrice: 'Last price',
                 Price: 'Price',
@@ -376,6 +380,9 @@ const i18n = {
         chooseCity: 'اختر مدينة',
         add: 'اضافة',
         cancel: 'إلغاء الأمر',
+        rememberMe: 'تذكرني',
+        noResults: 'لم يتم العثور على أي سجلات',
+        loggingIn: 'جارٍ تسجيل الدخول...',
         inputs: {
             command: 'الأمر',
             name: 'الاسم',
@@ -420,7 +427,6 @@ const i18n = {
             notNull: 'لا تقبل قيمة فارعة',
             finalAccount: 'الحساب الختامي',
             exchange: 'سعر الصرف',
-            exchangeRate: 'معامل التحويل',
             partName: 'اسم الجزء',
             partValue: 'قيمة الجزء',
             barcode: 'الباركود',
@@ -557,6 +563,8 @@ const i18n = {
                 AccBalance: 'حساب الموازنة',
                 AccCommission: 'حساب العمولة',
                 Account: 'الحساب',
+                CutRate: 'معامل التحويل',
+                CommissionRate: 'نسبة العمولة',
 
                 EmailAccount: 'حساب البريد',
                 DefCur: 'العملة',
