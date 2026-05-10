@@ -43,6 +43,7 @@ export default function ListPanel({
     onDelete,
     onPrint,
     renderIcon,
+    renderLabel,
     t,
     isMobile,
     isRTL,
@@ -215,14 +216,19 @@ export default function ListPanel({
                                                 <div className="list-panel-item-icon">
                                                     {renderIcon ? renderIcon(item) : getMenuIcon(guid)}
                                                 </div>
-                                                <div className="list-panel-item-text">
-                                                    <span className="list-panel-item-label">{label(item)}</span>
-                                                    {secondaryField && item[secondaryField] && (
-                                                        <span className="list-panel-item-secondary">
-                                                            {item[secondaryField]}
-                                                        </span>
-                                                    )}
-                                                </div>
+
+                                                {renderLabel ? (
+                                                    <div className="list-panel-item-text">{renderLabel(item)}</div>
+                                                ) : (
+                                                    <div className="list-panel-item-text">
+                                                        <span className="list-panel-item-label">{label(item)}</span>
+                                                        {secondaryField && item[secondaryField] && (
+                                                            <span className="list-panel-item-secondary">
+                                                                {item[secondaryField]}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         );
                                     })

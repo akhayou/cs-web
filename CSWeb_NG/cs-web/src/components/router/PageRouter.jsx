@@ -16,6 +16,7 @@ import UsersPage from '../pages/UsersPage.jsx';
 import AccountsPage from '../pages/AccountsPage.jsx';
 import MaterialsPage from '../pages/MaterialsPage.jsx';
 import MunimentsPage from '../pages/MunimentsPage.jsx';
+import PaymentsPage from '../pages/PaymentsPage.jsx';
 
 const PAGE_MAP = {
     // ── General ──────────────────────────────────────────────
@@ -37,8 +38,8 @@ const PAGE_MAP = {
     // CashVoucher:      CashVoucherPage,
     // CurDiffVoucher:   CurDiffVoucherPage,
     // OpenVoucher:      OpenVoucherPage,
-    // CreditPayment:    CreditPaymentPage,
-    // DebitPayment:     DebitPaymentPage,
+    CreditPayment: PaymentsPage,
+    DebitPayment: PaymentsPage,
     // repVouItems:      RepVouItemsPage,
     // repAccBalances:   RepAccBalancesPage,
     // AccReconcilement: AccReconcilementPage,

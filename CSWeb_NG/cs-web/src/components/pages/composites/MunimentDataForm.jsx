@@ -1,4 +1,4 @@
-import { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
+import { useState, useImperativeHandle, forwardRef, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import { selectStyles } from '../../../utils/Styles.js';
 import { buildEndpointURL } from '../../../services/config';
@@ -130,41 +130,73 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
     };
 
     // ── Ref methods ───────────────────────────────────────────
+    // Store munType meta for building Options in getValues
+    const munTypeMeta = useRef(null);
+
     useImperativeHandle(ref, () => ({
         /**
-         * refresh(schemaOrData, dataObj?)
+         * refresh(munTypeOrData, savedMunData?)
          *
-         * Two signatures:
-         *   refresh(schema, dataObj)  — schema-driven mode
-         *   refresh(dataObj)          — legacy object-driven mode
+         * Mode 1 — Full muniment type object (preferred):
+         *   refresh(munTypeObj, savedMunData)
+         *   munTypeObj = { guid, group, params, fields: [{ name, type, ... }] }
+         *   savedMunData = { DefCur: x, AccMove: y, Options: {...} }
          *
-         * schema   = [{ name, type, table?, note? }]
-         * dataObj  = { [name]: value }  (plain object, NOT json string)
+         * Mode 2 — Fields array only:
+         *   refresh(fieldsArray, savedMunData)
+         *   fieldsArray = [{ name, type, ... }]
+         *
+         * Mode 3 — Legacy object (no schema):
+         *   refresh(savedMunData)
+         *   savedMunData = { AccMove: 123, DefCur: 456, ... }
+         *
+         * Mode 4 — null/undefined:
+         *   refresh(null) → clears the form
          */
-        refresh(schemaOrData, dataObj) {
-            // If schema is null/undefined but dataObj exists → use legacy mode
-            const schema = Array.isArray(schemaOrData) ? schemaOrData : null;
-            const dataObjResolved = schema ? dataObj : (schemaOrData ?? dataObj);
-
-            if (!schema && !dataObjResolved) {
+        refresh(munTypeOrData, savedMunData) {
+            if (!munTypeOrData) {
                 setItems([]);
                 setValues({});
+                munTypeMeta.current = null;
                 return;
+            }
+
+            let fields = null;
+            let dataObj = savedMunData ?? null;
+
+            if (!Array.isArray(munTypeOrData) && typeof munTypeOrData === 'object' && munTypeOrData.fields) {
+                // ── Mode 1: Full muniment type object ──────────
+                // { guid, group, params, fields: [...] }
+                munTypeMeta.current = {
+                    guid: munTypeOrData.guid,
+                    group: munTypeOrData.group,
+                    params: munTypeOrData.params ?? {},
+                };
+                fields = munTypeOrData.fields;
+            } else if (Array.isArray(munTypeOrData)) {
+                // ── Mode 2: Fields array only ──────────────────
+                munTypeMeta.current = null;
+                fields = munTypeOrData;
+            } else if (typeof munTypeOrData === 'object') {
+                // ── Mode 3: Legacy object (no schema) ─────────
+                munTypeMeta.current = null;
+                fields = null;
+                dataObj = munTypeOrData;
             }
 
             let parsed = [];
             let initVals = {};
 
-            if (schema) {
-                // ── Mode 1: Schema-driven ──────────────────────
-                parsed = schema.map((entry) => ({
+            if (fields) {
+                // Schema-driven: use fields array for rendering
+                parsed = fields.map((entry) => ({
                     name: entry.name,
                     type: typeFromSchema(entry),
-                    initialValue: dataObjResolved?.[entry.name] ?? null,
+                    initialValue: dataObj?.[entry.name] ?? null,
                 }));
-            } else {
-                // ── Mode 2: Legacy object-driven ──────────────
-                parsed = Object.entries(dataObjResolved)
+            } else if (dataObj) {
+                // Legacy: infer type from field name and initial value
+                parsed = Object.entries(dataObj)
                     .filter(([name]) => name !== 'Options')
                     .map(([name, initialValue]) => ({
                         name,
@@ -181,15 +213,44 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
             setValues(initVals);
         },
 
-        // getValues — returns { [name]: value }
+        /**
+         * getValues()
+         *
+         * Returns the full MunData object including the Options block:
+         * {
+         *   DefCur: x, AccMove: y, ...fieldValues,
+         *   Options: {
+         *     MnoKind:      3,
+         *     MnoGroup:     "Accounting",
+         *     MnoDirection: -1,
+         *     MnoIsPayment: true,
+         *   }
+         * }
+         */
         getValues() {
-            return { ...values };
+            const meta = munTypeMeta.current;
+            const result = { ...values };
+
+            if (meta) {
+                // Build Options block from munType params
+                const params = meta.params ?? {};
+                result.Options = {
+                    MnoGroup: meta.group ?? null,
+                    MnoDirection: params.Direction != null ? parseInt(params.Direction) : null,
+                    MnoIsPayment: params.IsPayment != null ? params.IsPayment === 'True' : null,
+                    MnoKind: params.Kind != null ? parseInt(params.Kind) : null,
+                    MnoTitle: params.Title ?? null,
+                };
+                // Remove null options keys
+                Object.keys(result.Options).forEach((k) => result.Options[k] == null && delete result.Options[k]);
+            }
+
+            return result;
         },
 
-        // setValues — populate from saved data object
+        // setValues — merge incoming saved values into current state
         setValues(obj) {
             if (!obj) {
-                // Reset to initial values
                 const initVals = {};
                 items.forEach(({ name, initialValue }) => {
                     initVals[name] = initialValue ?? null;
@@ -197,7 +258,9 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
                 setValues(initVals);
                 return;
             }
-            setValues((prev) => ({ ...prev, ...obj }));
+            // Exclude Options block from field values
+            const { Options, ...fieldVals } = typeof obj === 'string' ? JSON.parse(obj) : obj;
+            setValues((prev) => ({ ...prev, ...fieldVals }));
         },
 
         validate() {

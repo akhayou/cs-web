@@ -250,20 +250,7 @@ export default function ClockPanel({ t, isMobile, logout, isRTL }) {
                             onChange={(option) => setSelectedCity(option?.value ?? '')}
                             placeholder={t ? t('chooseCity') : 'Choose city'}
                             isSearchable
-                            placeholder={t ? t('chooseCommand') : 'Choose command'}
                         />
-                        {/* <select
-                            className="fc-select"
-                            value={selectedCity}
-                            onChange={(e) => setSelectedCity(e.target.value)}
-                        >
-                            <option value="">-- {t ? t('chooseCity') : 'Choose city'} --</option>
-                            {allTimezones.map((tz) => (
-                                <option key={tz.value} value={tz.value}>
-                                    {tz.label}
-                                </option>
-                            ))}
-                        </select> */}
                         <div className="fc-popup-actions">
                             <button className="fc-popup-confirm" onClick={addClock} disabled={!selectedCity}>
                                 <PlusIcon /> {t ? t('add') : 'Add'}

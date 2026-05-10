@@ -107,7 +107,10 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
                     handleSelect(target ?? fetched[fetched.length - 1]);
                 }
             })
-            .catch(() => showToast('error', 'Failed to load'))
+            .catch((e) => {
+                console.log(e);
+                showToast('error', 'Failed to load');
+            })
             .finally(() => setLoading(false));
     }, []);
 
@@ -120,11 +123,14 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
     const munTypes = sessionStorage.getItem('munTypesData');
     const munTypesData = munTypes ? JSON.parse(munTypes) : null;
 
-    const toSTypeSchema = (value) => (munTypesData ? munTypesData.find((item) => item.guid === value)?.fields : null);
+    const toSTypeSchema = (value) => munTypesData.find((item) => item.guid === value);
+    //   munTypesData.find((o) => o.guid === item.MunGuid)
 
     // ── Select item (mirrors parseItem) ───────────────────────
     const handleSelect = (item) => {
         if (!item) return;
+        console.log(item);
+        console.log(munTypesData.find((o) => o.guid === item.MunGuid));
         setIsDisabled(true);
         setMethod('update');
         setSelectedKey(item.MunUID);
@@ -133,7 +139,6 @@ export default function MunimentsPage({ t, isMobile, onBack, logout, isRTL = fal
         setMunimentGuid(item.MunGuid ?? null);
         setColorHex(intToHex(item.MunColor));
         const typeSchema = toSTypeSchema(item.MunGuid);
-        console.log(typeSchema);
         dataFormRef.current?.refresh(typeSchema, item.MunData);
     };
 
