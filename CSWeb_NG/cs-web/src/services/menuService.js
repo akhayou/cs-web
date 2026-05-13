@@ -68,7 +68,7 @@ export async function buildMenuTree(muniments) {
     });
 
     addNameToNodes(menuCopy);
-    sessionStorage.setItem('menuTree', JSON.stringify(menuCopy));
+    localStorage.setItem('menuTree', JSON.stringify(menuCopy));
 
     return menuCopy;
 }

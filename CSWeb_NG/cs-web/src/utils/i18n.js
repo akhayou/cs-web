@@ -134,6 +134,7 @@ const i18n = {
             location: 'Location',
             descriptors: 'Descriptors',
             urHere: "You're here",
+            selectAccount: 'Please select the account',
             user: {
                 createDate: 'Create date',
                 expireDate: 'Expire date',
@@ -215,6 +216,7 @@ const i18n = {
                 Warehouse: 'Warehouse',
                 Branch: 'Branch',
                 CutRate: 'Exchange rate',
+                CurRate: 'Exchange rate',
                 CommissionRate: 'Commission rate',
 
                 LastPrice: 'Last price',
@@ -487,6 +489,7 @@ const i18n = {
             location: 'الموقع',
             descriptors: 'الواصفات',
             urHere: 'أنت هنا',
+            selectAccount: 'الرجاء تحديد الحساب',
             user: {
                 createDate: 'تاريخ الإنشاء',
                 expireDate: 'تاريخ الصلاحية',
@@ -564,6 +567,7 @@ const i18n = {
                 AccCommission: 'حساب العمولة',
                 Account: 'الحساب',
                 CutRate: 'معامل التحويل',
+                CurRate: 'معامل التحويل',
                 CommissionRate: 'نسبة العمولة',
 
                 EmailAccount: 'حساب البريد',

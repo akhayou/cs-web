@@ -7,7 +7,7 @@ export function AppProvider({ children }) {
     const [username, setUsername] = useState(sessionStorage.getItem('user') || null);
     const [menuTree, setMenuTree] = useState(() => {
         try {
-            return JSON.parse(sessionStorage.getItem('menuTree')) || [];
+            return JSON.parse(localStorage.getItem('menuTree')) || [];
         } catch {
             return [];
         }
@@ -51,15 +51,16 @@ export function AppProvider({ children }) {
 
     const handleForceLogout = () => {
         sessionStorage.clear();
+        localStorage.clear;
         setLoggedIn(false);
         setUsername(null);
         setMenuTree([]);
     };
 
     useEffect(() => {
-        if (loggedIn) {
-            checkSession();
-        }
+        // if (sessionStorage.getItem('user')) {
+        checkSession();
+        // }
     }, []);
 
     // Mirrors: isDarkTheme.subscribe → document.body.classList.toggle('dark-theme', value)
@@ -88,6 +89,7 @@ export function AppProvider({ children }) {
         }
 
         sessionStorage.clear();
+        localStorage.clear;
         setLoggedIn(false);
         setUsername(null);
         setMenuTree([]);

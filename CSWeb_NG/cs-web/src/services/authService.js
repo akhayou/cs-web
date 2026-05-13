@@ -76,10 +76,8 @@ export async function handleLogin(userLogin, userPassword) {
     const loginRes = await fetch(url, buildFetchOptions(loginCommand(username, password)));
     const loginData = await loginRes.json();
 
-    // Mirrors: sessionStorage.setItem('seeds', JSON.stringify(loginData.result.Seeds))
-    sessionStorage.setItem('seeds', JSON.stringify(loginData.result.Seeds));
+    localStorage.setItem('seeds', JSON.stringify(loginData.result.Seeds));
 
-    // Mirrors: if (loginData.errors) { this._showMessage('error', ...) }
     if (loginData.errors) {
         throw new Error(loginData.errors[0].name);
     }
@@ -98,17 +96,15 @@ export async function handleLogin(userLogin, userPassword) {
         throw new Error(munData.errors[0].name);
     }
 
-    // Mirrors: sessionStorage.setItem('muniments', JSON.stringify(munData.result.items))
     if (munData.result?.items) {
-        sessionStorage.setItem('muniments', JSON.stringify(munData.result.items));
+        localStorage.setItem('muniments', JSON.stringify(munData.result.items));
     }
 
     if (munTypesData.result?.items) {
-        sessionStorage.setItem('munTypesData', JSON.stringify(munTypesData.result.items));
+        localStorage.setItem('munTypesData', JSON.stringify(munTypesData.result.items));
     }
 
     // ── 3. SET SESSION USER ───────────────────────────────────────────────────
-    // Mirrors: sessionStorage.setItem('user', username)
     sessionStorage.setItem('user', username);
 
     const dscItems = dscTypesData?.result?.items ?? [];

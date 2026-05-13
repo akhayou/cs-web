@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApp } from './context/AppContext.jsx';
 import LoginPage from './components/LoginPage.jsx';
-import MainPage from './components/MainPage.jsx';
+import MainPage from './/pages/MainPage.jsx';
 import { handleLogin as authLogin } from './services/authService.js';
 import { useTranslation } from './utils/i18n.js';
 
