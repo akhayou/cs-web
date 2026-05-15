@@ -383,17 +383,21 @@ export default function MaterialsPage({ t, isMobile, onBack, logout, isRTL = fal
 
                                 <div className="form-field">
                                     <label className="form-label">{t ? t('inputs.book') : 'Book'}</label>
-                                    <Select
-                                        styles={selectStyles(isRTL)}
-                                        isClearable
-                                        options={toOption(books, 'ElmUID', 'ElmName')}
-                                        value={findOption(books, 'ElmUID', 'ElmName', bookValue)}
-                                        onChange={(opt) => {
-                                            setBookValue(opt?.value ?? null);
-                                            setIsDisabled(false);
-                                        }}
-                                        placeholder={t ? t('inputs.book') : 'Book'}
-                                    />
+                                    <div className="form-select-wrap">
+                                        <Select
+                                            styles={selectStyles(isRTL)}
+                                            isClearable
+                                            options={toOption(books, 'ElmUID', 'ElmName')}
+                                            value={findOption(books, 'ElmUID', 'ElmName', bookValue)}
+                                            onChange={(opt) => {
+                                                setBookValue(opt?.value ?? null);
+                                                setIsDisabled(false);
+                                            }}
+                                            placeholder={t ? t('inputs.book') : 'Book'}
+                                            className="react-select-container"
+                                            classNamePrefix="react-select"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 

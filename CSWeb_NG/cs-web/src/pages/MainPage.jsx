@@ -29,7 +29,7 @@ const getNodeFromUrl = () => new URLSearchParams(window.location.search).get('no
 // Drill sidebar to match a parent stack (no animation)
 const syncSidebar = (ref, parents) => {
     setTimeout(() => {
-        ref.current?.resetToRoot();
+        // ref.current?.resetToRoot();
         parents.forEach((node) => {
             if (node.children?.length) ref.current?.drillInById?.(node.id);
         });
@@ -219,9 +219,96 @@ export default function MainPage() {
     };
 
     // ── Back ──────────────────────────────────────────────────
+    // const handleBack = () => {
+    //     // Always use browser history — popstate handler restores state
+    //     window.history.back();
+    // };
+
+    // ── Back ──────────────────────────────────────────────────
+    // const handleBack = () => {
+    //     // Case 1: A leaf page is open
+    //     if (activeLeaf) {
+    //         const path = findPath(menuTree, activeLeaf.id);
+
+    //         if (!path) {
+    //             handleGoHome();
+    //             return;
+    //         }
+
+    //         // Example:
+    //         // path = [Accounts, Users]
+    //         // parent = Accounts
+    //         const parent = path.length > 1 ? path[path.length - 2] : null;
+
+    //         if (parent) {
+    //             // Keep the parent in the stack so Commands shows its children
+    //             const parentStack = path.slice(0, -1); // [Accounts]
+
+    //             setActiveLeaf(null);
+    //             setSelectedKey(null);
+    //             setNodeStack(parentStack);
+
+    //             // IMPORTANT:
+    //             // Sidebar must drill into Accounts so its children are visible.
+    //             // Use the full parent stack.
+
+    //             syncSidebar(menuRef, parentStack);
+
+    //             pushHistory(null, parentStack);
+    //         } else {
+    //             handleGoHome();
+    //         }
+
+    //         return;
+    //     }
+
+    //     // Case 2: We are inside a parent menu (Commands view)
+    //     if (nodeStack.length > 0) {
+    //         // Current parent is the last item in nodeStack.
+    //         // Going back removes the current level.
+    //         const newStack = nodeStack.slice(0, -1);
+
+    //         setActiveLeaf(null);
+    //         setSelectedKey(null);
+    //         setNodeStack(newStack);
+
+    //         // Synchronize Sidebar with the new stack.
+    //         // Example:
+    //         // [Administration, Accounts] -> back -> [Administration]
+    //         syncSidebar(menuRef, newStack);
+
+    //         pushHistory(null, newStack);
+    //         return;
+    //     }
+
+    //     // Case 3: Already at Home
+    //     handleGoHome();
+    // };
+
+    // ── Back ──────────────────────────────────────────────────
     const handleBack = () => {
-        // Always use browser history — popstate handler restores state
-        window.history.back();
+        // Determine the current node id
+        const currentNodeId = activeLeaf?.id ?? nodeStack[nodeStack.length - 1]?.id;
+
+        if (!currentNodeId) {
+            handleGoHome();
+            return;
+        }
+
+        // Find full path to current node
+        const path = findPath(menuTree, currentNodeId);
+
+        // No parent → go home
+        if (!path || path.length < 2) {
+            handleGoHome();
+            return;
+        }
+
+        // Parent node = previous item in the path
+        const parentNode = path[path.length - 2];
+
+        // Open the parent node in the same tab
+        handleNavigate(parentNode);
     };
 
     // ── Go home ───────────────────────────────────────────────

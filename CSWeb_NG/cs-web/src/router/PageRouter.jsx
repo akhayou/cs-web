@@ -42,7 +42,7 @@ const PAGE_MAP = {
     // OpenVoucher:      OpenVoucherPage,
     CreditPayment: PaymentsPage,
     DebitPayment: PaymentsPage,
-    RepVouItems: RepVouItemsPage,
+    repVouItems: RepVouItemsPage,
     repAccBalances: RepAccBalancesPage,
     // AccReconcilement: AccReconcilementPage,
 

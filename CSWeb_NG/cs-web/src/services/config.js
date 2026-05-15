@@ -6,23 +6,29 @@ export async function loadConfig() {
 }
 
 export function buildEndpointURL(endpoint) {
-    if (!_config) throw new Error('Config not loaded. Call loadConfig() first.');
-
-    const url = new URL(window.location.href);
-    let aURL;
-
-    if (url.pathname === '/') {
-        const port = _config.port;
-        if (parseInt(port, 10) > 0)
-            aURL = `${_config.isSecure ? 'https' : 'http'}://${_config.host}:${port}/${_config.database}/${_config.endpoints[endpoint]}`;
-        else
-            aURL = `${_config.isSecure ? 'https' : 'http'}://${_config.host}/${_config.database}/${_config.endpoints[endpoint]}`;
-    } else {
-        const parts = url.pathname.split('/').filter(Boolean);
-        if (parts.length > 0)
-            aURL = `${url.protocol}//${url.hostname}:${url.port}/${parts[0]}/${_config.endpoints[endpoint]}`;
-        else aURL = `${url.protocol}//${url.hostname}:${url.port}/${_config.endpoints[endpoint]}`;
+    if (!_config) {
+        throw new Error('Config not loaded. Call loadConfig() first.');
     }
 
-    return aURL;
+    const endpointPath = _config.endpoints?.[endpoint];
+
+    if (!endpointPath) {
+        throw new Error(`Unknown endpoint: ${endpoint}`);
+    }
+
+    const protocol = _config.isSecure ? 'https' : 'http';
+    const host = _config.host;
+
+    const port = _config.port && parseInt(_config.port, 10) > 0 ? `:${_config.port}` : '';
+
+    // base path from current app (supports /, /app/, /something/)
+    const basePath = window.location.pathname.replace(/\/$/, '');
+
+    // build base URL
+    const baseURL = `${protocol}://${host}${port}`;
+
+    // if database is required always include it
+    const dbPart = _config.database ? `/${_config.database}` : '';
+
+    return `${baseURL}${dbPart}${basePath}/${endpointPath}`;
 }

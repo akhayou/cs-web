@@ -352,6 +352,10 @@ const i18n = {
             receipts: 'Receipts',
             bills: 'Bills',
         },
+        Session: {
+            InvalidUser: 'Invalid user or pass',
+            emptyUsername: 'Enter your username...!',
+        },
     },
     'ar-SY': {
         company: 'الحلول المبتكرة',
@@ -707,6 +711,10 @@ const i18n = {
             muniments: 'المستندات',
             receipts: 'الايصالات',
             bills: 'الفواتير',
+        },
+        Session: {
+            InvalidUser: 'اسم المستخدم أو كلمة المرور غير صحيحة',
+            emptyUsername: 'أدخل اسم المستخدم ...!',
         },
     },
 };

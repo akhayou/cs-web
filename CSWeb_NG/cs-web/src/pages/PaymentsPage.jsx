@@ -428,7 +428,8 @@ export default function PaymentsPage({ nodeId, t, isMobile, isRTL = false, logou
                                             value={findOpt(accounts, 'ElmUID', 'ElmName', accValue)}
                                             onChange={(opt) => setAccValue(opt?.value ?? null)}
                                             placeholder={t ? t('labels.muniments.Account') : 'Account'}
-                                            menuPortalTarget={document.body}
+                                            className="react-select-container"
+                                            classNamePrefix="react-select"
                                         />
                                     </div>
 
@@ -465,28 +466,34 @@ export default function PaymentsPage({ nodeId, t, isMobile, isRTL = false, logou
                                             <label className="form-label">
                                                 {t ? t('labels.currency') : 'Currency'}
                                             </label>
-                                            <Select
-                                                styles={selectStyles(isRTL)}
-                                                isClearable
-                                                options={toOpts(currencies)}
-                                                value={findOpt(currencies, 'ElmUID', 'ElmName', currencyValue)}
-                                                onChange={(opt) => setCurrencyValue(opt?.value ?? null)}
-                                                placeholder={t ? t('labels.currency') : 'Currency'}
-                                                menuPortalTarget={document.body}
-                                            />
+                                            <div className="form-select-wrap">
+                                                <Select
+                                                    styles={selectStyles(isRTL)}
+                                                    isClearable
+                                                    options={toOpts(currencies)}
+                                                    value={findOpt(currencies, 'ElmUID', 'ElmName', currencyValue)}
+                                                    onChange={(opt) => setCurrencyValue(opt?.value ?? null)}
+                                                    placeholder={t ? t('labels.currency') : 'Currency'}
+                                                    className="react-select-container"
+                                                    classNamePrefix="react-select"
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className="form-field">
                                             <label className="form-label">{t ? t('labels.branch') : 'Branch'}</label>
-                                            <Select
-                                                styles={selectStyles(isRTL)}
-                                                isClearable
-                                                options={toOpts(branches)}
-                                                value={findOpt(branches, 'ElmUID', 'ElmName', branchValue)}
-                                                onChange={(opt) => setBranchValue(opt?.value ?? null)}
-                                                placeholder={t ? t('labels.branch') : 'Branch'}
-                                                menuPortalTarget={document.body}
-                                            />
+                                            <div className="form-select-wrap">
+                                                <Select
+                                                    styles={selectStyles(isRTL)}
+                                                    isClearable
+                                                    options={toOpts(branches)}
+                                                    value={findOpt(branches, 'ElmUID', 'ElmName', branchValue)}
+                                                    onChange={(opt) => setBranchValue(opt?.value ?? null)}
+                                                    placeholder={t ? t('labels.branch') : 'Branch'}
+                                                    className="react-select-container"
+                                                    classNamePrefix="react-select"
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className="form-field">

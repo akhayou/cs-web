@@ -99,10 +99,12 @@ export function AppProvider({ children }) {
     };
 
     const initAfterLogin = (result) => {
-        setUsername(result.username);
-        setMenuTree(result.menuTree);
-        setLoggedIn(true);
-        setCurrentPage(sessionStorage.getItem('currentPage') || 'home');
+        try {
+            setUsername(result.username);
+            setMenuTree(result.menuTree);
+            setLoggedIn(true);
+            setCurrentPage(sessionStorage.getItem('currentPage') || 'home');
+        } catch (error) {}
     };
 
     return (

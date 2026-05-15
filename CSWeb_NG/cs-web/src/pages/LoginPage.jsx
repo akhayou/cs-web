@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styles from './LoginPage.module.css';
+import styles from '../components/LoginPage.module.css';
 import { useTranslation } from '../utils/i18n.js';
 import { PersonIcon, EyeIcon, EyeOffIcon, EnterIcon } from '../utils/icons.jsx';
 
@@ -214,7 +214,7 @@ export default function LoginPage({ errorMessage, loading = false, onLogin }) {
                             {/* Error */}
                             {errorMessage && (
                                 <p className={styles.errorMessage} role="alert">
-                                    {errorMessage}
+                                    {t ? t(errorMessage) : errorMessage}
                                 </p>
                             )}
 

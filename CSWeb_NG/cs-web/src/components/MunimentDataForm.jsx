@@ -322,16 +322,20 @@ const MunimentDataForm = forwardRef(function MunimentDataForm({ showLabel = true
 
                             {/* account / currency / warehouses / branches / prices → Select */}
                             {['account', 'currency', 'warehouses', 'branches', 'prices'].includes(type) && (
-                                <Select
-                                    inputId={name}
-                                    styles={selectStyles(isRTL)}
-                                    isClearable
-                                    options={opts}
-                                    value={findOpt(opts, val)}
-                                    onChange={(opt) => handleChange(name, opt?.value ?? null)}
-                                    placeholder={label}
-                                    menuPortalTarget={document.body}
-                                />
+                                <div className="form-select-wrap">
+                                    <Select
+                                        inputId={name}
+                                        styles={selectStyles(isRTL)}
+                                        isClearable
+                                        options={opts}
+                                        value={findOpt(opts, val)}
+                                        onChange={(opt) => handleChange(name, opt?.value ?? null)}
+                                        placeholder=""
+                                        // Add these two lines
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
+                                    />
+                                </div>
                             )}
                         </div>
                     );

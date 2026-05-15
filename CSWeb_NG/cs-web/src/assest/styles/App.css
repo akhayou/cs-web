@@ -1544,6 +1544,25 @@ body {
     color-scheme: light;
 }
 
+.light-theme .react-select__menu-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.light-theme .react-select__menu-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.light-theme .react-select__menu-list::-webkit-scrollbar-thumb {
+    background: #b0b0b0;
+    border-radius: 8px;
+}
+
+.light-theme .react-select__menu-list::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+
 
 .form-select-display {
     display: flex;

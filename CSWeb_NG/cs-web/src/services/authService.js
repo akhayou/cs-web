@@ -76,11 +76,9 @@ export async function handleLogin(userLogin, userPassword) {
     const loginRes = await fetch(url, buildFetchOptions(loginCommand(username, password)));
     const loginData = await loginRes.json();
 
-    localStorage.setItem('seeds', JSON.stringify(loginData.result.Seeds));
-
     if (loginData.errors) {
         throw new Error(loginData.errors[0].name);
-    }
+    } else localStorage.setItem('seeds', JSON.stringify(loginData.result.Seeds));
 
     // ── 2. FETCH MUNIMENTS + DSC TYPES + MUN TYPES (parallel) ────────────────
     // OJet did these sequentially — we run them in parallel for speed.

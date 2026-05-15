@@ -70,17 +70,17 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
 
     const DATA_TYPES = [
         { value: 0, guid: 'Text', label: t('labels.dataTypes.text'), icon: '𝐓' },
-        { value: 0, guid: 'Phone', label: t('labels.dataTypes.phone'), icon: '📞' },
-        { value: 0, guid: 'Email', label: t('labels.dataTypes.email'), icon: '✉' },
+        // { value: 0, guid: 'Phone', label: t('labels.dataTypes.phone'), icon: '📞' },
+        //{ value: 0, guid: 'Email', label: t('labels.dataTypes.email'), icon: '✉' },
         { value: 1, guid: 'Boolean', label: t('labels.dataTypes.boolean'), icon: '☑' },
         { value: 2, guid: 'Number', label: t('labels.dataTypes.number'), icon: '#' },
         { value: 3, guid: 'Date', label: t('labels.dataTypes.date'), icon: '📅' },
         { value: 4, guid: 'Time', label: t('labels.dataTypes.time'), icon: '⏱' },
         { value: 100, guid: 'List', label: t('labels.dataTypes.list'), icon: '≡' },
         { value: 200, guid: 'Multi', label: t('labels.dataTypes.multiSelect'), icon: '☰' },
-        { value: 300, guid: 'Accounts', label: t('labels.dataTypes.account'), icon: '👤' },
-        { value: 300, guid: 'SubAccounts', label: t('labels.dataTypes.subAccount'), icon: '👤' },
-        { value: 300, guid: 'Materials', label: t('labels.dataTypes.material'), icon: '📦' },
+        // { value: 300, guid: 'Accounts', label: t('labels.dataTypes.account'), icon: '👤' },
+        // { value: 300, guid: 'SubAccounts', label: t('labels.dataTypes.subAccount'), icon: '👤' },
+        // { value: 300, guid: 'Materials', label: t('labels.dataTypes.material'), icon: '📦' },
     ];
 
     const options = DATA_TYPES.map((dt) => ({
@@ -146,12 +146,13 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
             .then((r) => r.json())
             .then((data) => {
                 if (data?.errors?.length) {
+                    debugger;
                     if (data.errors[0].name === 'Session.NotFound') {
                         showToast('error', t('messages.sessionExpired'));
                         setTimeout(() => {
                             logout();
                         }, 1500);
-                    } else showToast('error', data.errors[0].name);
+                    } else showToast('error', data.errors[0].message);
                     return;
                 }
                 const fetched = data?.result?.items || [];
@@ -265,7 +266,7 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
                         setTimeout(() => {
                             logout();
                         }, 1500);
-                    } else showToast('error', data.errors[0].name);
+                    } else showToast('error', data.errors[0].message);
 
                     return;
                 }
@@ -363,6 +364,8 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
                                                 </div>
                                             )}
                                             onChange={(opt) => handleDataTypeChange(opt.value)}
+                                            className="react-select-container"
+                                            classNamePrefix="react-select"
                                         />
                                     </div>
                                 </div>
@@ -370,7 +373,7 @@ export default function DescriptorsPage({ t, isMobile, onBack, logout, isRTL, ro
                                 {/* Entities — mirrors oj-select-many */}
                                 <div className="form-field">
                                     <label className="form-label">{t?.('inputs.entities') ?? 'Entities'}</label>
-                                    <div className="react-select-container">
+                                    <div className="form-select-wrap">
                                         <Select
                                             styles={selectStyles(isRTL, { multiValueWidth: '140px' })}
                                             isMulti

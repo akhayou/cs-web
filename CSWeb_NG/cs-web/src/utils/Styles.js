@@ -37,6 +37,8 @@ export const selectStyles = (isRTL = false, options = {}) => ({
     menuList: (base) => ({
         ...base,
         padding: 0,
+        backgroundColor: 'var(--surface)',
+        colorScheme: document.documentElement.classList.contains('light-theme') ? 'light' : 'dark',
     }),
 
     option: (base, state) => ({
@@ -108,10 +110,32 @@ export const selectStyles = (isRTL = false, options = {}) => ({
         backgroundColor: 'var(--border)',
     }),
 
-    dropdownIndicator: (base) => ({
+    // dropdownIndicator: (base) => ({
+    //     ...base,
+    //     color: 'var(--text-muted)',
+    //     ':hover': { color: 'var(--text)' },
+    // }),
+    // Change only this section in selectStyles.js
+
+    dropdownIndicator: (base, state) => ({
         ...base,
         color: 'var(--text-muted)',
-        ':hover': { color: 'var(--text)' },
+        ':hover': {
+            color: 'var(--text)',
+        },
+
+        // Replace the default arrow with a "+" icon when isMulti=true
+        '&::before': {
+            content: state.selectProps.isMulti ? '"+"' : '""',
+            fontSize: '20px',
+            fontWeight: '600',
+            lineHeight: 1,
+        },
+
+        // Hide the default SVG arrow for multi-select
+        '& svg': {
+            display: state.selectProps.isMulti ? 'none' : 'block',
+        },
     }),
 
     clearIndicator: (base) => ({

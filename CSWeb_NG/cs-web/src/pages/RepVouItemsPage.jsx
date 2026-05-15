@@ -434,15 +434,18 @@ export default function RepVouItemsPage({ t, isMobile, isRTL = false, logout, ro
                         <form ref={formRef} noValidate onSubmit={(e) => e.preventDefault()}>
                             <div className="form-field">
                                 <label className="form-label">{t ? t('inputs.accCodeName') : 'Account'} *</label>
-                                <Select
-                                    styles={selectStyles(isRTL)}
-                                    options={accOptions}
-                                    value={selectedAccOpt}
-                                    onChange={(opt) => setAccValue(opt?.value ?? null)}
-                                    placeholder={t ? t('inputs.accCodeName') : 'Account'}
-                                    required
-                                    menuPortalTarget={document.body}
-                                />
+                                <div className="form-select-wrap">
+                                    <Select
+                                        styles={selectStyles(isRTL)}
+                                        options={accOptions}
+                                        value={selectedAccOpt}
+                                        onChange={(opt) => setAccValue(opt?.value ?? null)}
+                                        placeholder={t ? t('inputs.accCodeName') : 'Account'}
+                                        required
+                                        className="react-select-container"
+                                        classNamePrefix="react-select"
+                                    />
+                                </div>
                             </div>
                         </form>
                         <div className="rep-picker-actions">
